@@ -28,6 +28,14 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
+  /**
+   * Registers a new user.
+   *
+   * @param request the registration request data.
+   * @return UserResponse indicating the result of the registration.
+   * @throws UserAlreadyExistException if the user with the given email already exists.
+   * @since 2 May 2024
+   */
   public UserResponse register(RegisterRequestDto request) {
     Optional<User> optionalUser = repository.findByEmail(request.getEmail());
     if (optionalUser.isPresent()) {
@@ -44,6 +52,14 @@ public class AuthenticationService {
     return new UserResponse(MessageConstant.ACCOUNT_CREATION_SUCCESSFUL);
   }
 
+  /**
+   * Authenticates a user.
+   *
+   * @param request the authentication request data.
+   * @return AuthenticationResponseDto containing JWT tokens.
+   * @throws UserNotFoundException if the user is not found.
+   * @since 2 May 2024
+   */
   public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
     log.info("login or authenticating");
     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));

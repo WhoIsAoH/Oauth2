@@ -25,21 +25,47 @@ public class JwtServiceimpl implements JwtService {
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
 
+    /**
+     * Extracts the username from a JWT token.
+     *
+     * @param token the JWT token
+     * @return the username extracted from the token
+     */
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
     }
 
+    /**
+     * Extracts a specific claim from a JWT token.
+     *
+     * @param token          the JWT token
+     * @param claimsResolver function to resolve the claim from the token's claims
+     * @param <T>            the type of the claim
+     * @return the extracted claim
+     */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    /**
+     * Generates an authentication JWT token.
+     *
+     * @param userDetails the user details
+     * @return a list containing the authentication JWT token and refresh token
+     */
     public List<String> generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-
+    /**
+     * Generates a JWT token with custom claims.
+     *
+     * @param extraClaims   additional claims to include in the token
+     * @param userDetails   the user details
+     * @return a list containing the JWT token and refresh token
+     */
     public List<String> generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return List.of(
                 Jwts
@@ -52,6 +78,12 @@ public class JwtServiceimpl implements JwtService {
                 .compact(),refreshToken(userDetails));
     }
 
+    /**
+     * Generates a refresh JWT token.
+     *
+     * @param userDetails the user details
+     * @return the refresh JWT token
+     */
     public String refreshToken(UserDetails userDetails){
         return Jwts
                 .builder()
@@ -63,6 +95,13 @@ public class JwtServiceimpl implements JwtService {
                 .compact();
     }
 
+    /**
+     * Validates if a JWT token is valid for a specific user.
+     *
+     * @param token        the JWT token to validate
+     * @param userDetails the user details to validate against
+     * @return true if the token is valid for the user, false otherwise
+     */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
