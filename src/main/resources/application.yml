@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oauth2assignment?createDatabaseIfNotExist=true
+    username: root
+    password: root
+
+  #JPA
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      database: mysql
+      database-platform: org.hibernate.dialect.MySQLDialect
+
+SECRET_KEY: xxC6yc0IJIujgqxvOFT+bQaTDQ5OxgvwZuDdZdwjCHpDKXLby4ubwIdk7NfCMGis
+
